@@ -1,5 +1,6 @@
-#ifndef DIBUJOS_H_INCLUDED
-#define DIBUJOS_H_INCLUDED
+#ifndef RENDER_H_INCLUDED
+#define RENDER_H_INCLUDED
+
 #include <GBT/gbt.h>
 #define PIXELES_X_LADO 8
 #define PX_PADDING 4
@@ -11,4 +12,4 @@
 
 void dibujar(const uint8_t[][PIXELES_X_LADO], uint16_t oX, uint16_t oY);
 
-#endif // DIBUJOS_H_INCLUDED
+#endif // RENDER_H_INCLUDED
