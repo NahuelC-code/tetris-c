@@ -1,4 +1,4 @@
-#include "funciones.h"
+#include "render.h"
 
 void dibujar(const uint8_t dibujo[][PIXELES_X_LADO], uint16_t oX, uint16_t oY)
 {
