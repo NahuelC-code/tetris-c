@@ -12,4 +12,6 @@ typedef struct{
 
 }Tetrimino;
 
+void rotar_tetrimino(Tetrimino* p);
+
 #endif // TETRIMINOS_H_INCLUDED

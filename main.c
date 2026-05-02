@@ -45,8 +45,8 @@ int main()
         gbt_procesar_entrada();
         if(hay_pieza_activa == 0)
         {
-            hay_pieza_activa = valida_spawn_pieza(board,&pieza_o) ;
-            if (hay_pieza_activa == GAME_OVER)
+            hay_pieza_activa = valida_colision_pieza(board,&pieza_o) ;
+            if (hay_pieza_activa == COLISION)
             {
                 corriendo = 0;
             }
