@@ -65,7 +65,7 @@ int main()
             resul_shift_down = 0;
             hay_pieza_activa = 0;
         }
-        print_board(board);//Reemplazar por render GBT
+        mostrar_tablero(board,&pieza_o);//Reemplazar por render GBT
         gbt_esperar(100); //Reemplazar por render GBT
         system("cls"); // Reemplazar por render GBT
     }
