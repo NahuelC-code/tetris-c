@@ -11,7 +11,7 @@ int valida_colision_pieza(int board[][COL_BOARD],Tetrimino* p )
         for (j= 0; j< TAM_TETRIMINO; j++)
         {
 
-            if (p->forma[i][j] == 1 && board[i+p->pos_y][p->pos_x+j] == 1)
+            if (p->forma[i][j] == 1 && (p->pos_x + j < 0 || p->pos_x + j >= COL_BOARD || p->pos_y + i < 0 || p->pos_y + i >= FIL_BOARD || board[i + p->pos_y][p->pos_x + j] == 1))
             {
               return COLISION;
             }
@@ -82,7 +82,7 @@ void valida_rotacion_pieza(int board[][COL_BOARD],Tetrimino* p)
     Tetrimino aux = *p;
 
     rotar_tetrimino(p);
-    if(valida_colision_pieza(board,p) == -1)
+    if(valida_colision_pieza(board,p) == COLISION)
     {
         *p = aux;
     }
