@@ -36,12 +36,13 @@ int main()
             {0,1,1,0},
             {0,0,0,0},
             {0,0,0,0}
-        }
+            }
     };
 
     int corriendo = 1;
     int hay_pieza_activa = 0;
     int resul_shift_down = 0;
+    int lineas_completadas;
 
     while(corriendo)
     {
@@ -73,7 +74,7 @@ int main()
             hay_pieza_activa = valida_colision_pieza(board,&pieza_o);
             if (hay_pieza_activa == COLISION)
             {
-                corriendo = COLISION;
+                corriendo = COLISION; //fin de la ejecucion.
             }
         }
 
@@ -85,6 +86,7 @@ int main()
         if(resul_shift_down == 1)
         {
             colocar_pieza(board,&pieza_o);
+            lineas_completadas = borrar_lineas(board);
             pieza_o.pos_y = 0;
             pieza_o.pos_x = (COL_BOARD - TAM_TETRIMINO)/2;
             resul_shift_down = 0;
