@@ -1,19 +1,45 @@
 #include "board.h"
 #include <stdio.h>
 
-void init_board(int b[][COL_BOARD])
+
+void** create_init_board(int filas, int columnas, size_t tamElem)
 {
-    for(int i=0;i<FIL_BOARD;i++)
+    void** m = malloc(filas * sizeof(void*));
+
+    if(!m)
     {
-        for(int j=0;j<COL_BOARD;j++)
+        return NULL;
+    }
+
+    void** ult = m + (filas - 1);
+
+    for(void** i = m; i <= ult; i++)
+    {
+        *i = calloc(columnas, tamElem);
+
+        if(!*i)
         {
-            b[i][j] = 0;
+            destruirBoard(m, i - m);
+            return NULL;
         }
     }
 
+    return m;
 }
 
-void print_board(int b[][COL_BOARD])
+void destruirBoard(void** m, int filas)
+{
+    void** ult = m + (filas - 1);
+
+    for(void** i = m; i <= ult; i++)
+    {
+        free(*i);
+    }
+
+    free(m);
+}
+
+void print_board(int** b)
 {
     for (int i=0;i<FIL_BOARD;i++)
     {

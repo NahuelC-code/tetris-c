@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 
-int valida_colision_pieza(int board[][COL_BOARD],Tetrimino* p )
+int valida_colision_pieza(int** board,Tetrimino* p )
 {
     int i,j;
 
@@ -20,7 +20,7 @@ int valida_colision_pieza(int board[][COL_BOARD],Tetrimino* p )
     return 1;
 }
 
-int valida_shift_down_pieza(int board[][COL_BOARD],Tetrimino* p)
+int valida_shift_down_pieza(int** board,Tetrimino* p)
 {
     int i, j;
 
@@ -41,7 +41,7 @@ int valida_shift_down_pieza(int board[][COL_BOARD],Tetrimino* p)
     return 0;
 }
 
-void valida_shift_left_pieza(int board[][COL_BOARD],Tetrimino* p)
+void valida_shift_left_pieza(int** board,Tetrimino* p)
 {
     int i,j;
 
@@ -59,7 +59,7 @@ void valida_shift_left_pieza(int board[][COL_BOARD],Tetrimino* p)
     p->pos_x --;
 }
 
-void valida_shift_right_pieza(int board[][COL_BOARD],Tetrimino* p)
+void valida_shift_right_pieza(int** board,Tetrimino* p)
 {
     int i,j;
 
@@ -77,7 +77,7 @@ void valida_shift_right_pieza(int board[][COL_BOARD],Tetrimino* p)
     p->pos_x ++;
 }
 
-void valida_rotacion_pieza(int board[][COL_BOARD],Tetrimino* p)
+void valida_rotacion_pieza(int** board,Tetrimino* p)
 {
     Tetrimino aux = *p;
 
@@ -89,7 +89,7 @@ void valida_rotacion_pieza(int board[][COL_BOARD],Tetrimino* p)
 }
 
 
-void colocar_pieza(int board[][COL_BOARD],Tetrimino* p)
+void colocar_pieza(int** board,Tetrimino* p)
 {
     int i,j;
     for(i=0;i<TAM_TETRIMINO;i++)
@@ -104,7 +104,7 @@ void colocar_pieza(int board[][COL_BOARD],Tetrimino* p)
     }
 }
 
-void mostrar_tablero(int board[][COL_BOARD],Tetrimino* p) //Luego de los print se encarga el render
+void mostrar_tablero(int** board,Tetrimino* p) //Luego de los print se encarga el render
 {
     int i,j;
 

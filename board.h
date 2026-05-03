@@ -4,8 +4,11 @@
 #define FIL_BOARD 20
 #define COL_BOARD 10
 
-void init_board(int b[][COL_BOARD]);
-void print_board(int b[][COL_BOARD]);
+#include <stdlib.h>
+
+void** create_init_board(int filas, int columnas, size_t tam);
+void destruirBoard(void** m, int filas);
+void print_board(int** b);
 
 
 #endif // BOARD_H_INCLUDED

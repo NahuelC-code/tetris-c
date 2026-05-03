@@ -4,14 +4,14 @@
 #include "tetriminos.h"
 #include "board.h"
 
-#define COLISION -1
+#define COLISION 0
 #define INSERTAR_PIEZA 1
 
-int valida_colision_pieza(int board[][COL_BOARD],Tetrimino* p);
-int valida_shift_down_pieza(int board[][COL_BOARD], Tetrimino* p);
-void valida_shift_left_pieza(int board[][COL_BOARD], Tetrimino* p);
-void valida_shift_right_pieza(int board[][COL_BOARD], Tetrimino* p);
-void valida_rotacion_pieza(int board[][COL_BOARD],Tetrimino* p);
-void colocar_pieza(int board[][COL_BOARD],Tetrimino* p) ;
-void mostrar_tablero(int board[][COL_BOARD],Tetrimino* p) ;
+int valida_colision_pieza(int** board,Tetrimino* p);
+int valida_shift_down_pieza(int** board, Tetrimino* p);
+void valida_shift_left_pieza(int** board, Tetrimino* p);
+void valida_shift_right_pieza(int** board, Tetrimino* p);
+void valida_rotacion_pieza(int** board,Tetrimino* p);
+void colocar_pieza(int** board,Tetrimino* p) ;
+void mostrar_tablero(int** board,Tetrimino* p) ;
 #endif // GAME_H_INCLUDED
