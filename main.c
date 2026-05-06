@@ -32,13 +32,12 @@ int main()
         .pos_y = 0,
         .pos_x = (COL_BOARD - TAM_TETRIMINO)/2,
         .forma = {
-            {0,1,1,0},
-            {0,1,1,0},
+            {1,1,1,1},
+            {0,0,0,0},
             {0,0,0,0},
             {0,0,0,0}
             }
     };
-
     int corriendo = 1;
     int hay_pieza_activa = 0;
     int resul_shift_down = 0;

@@ -1,41 +1,63 @@
 #include "tetriminos.h"
 
-int forma_o[TAM_TETRIMINO][TAM_TETRIMINO] = {{0,1,1,0},
-                                             {0,1,1,0},
-                                             {0,0,0,0},
-                                             {0,0,0,0}};
+int piezas[CANT_PIEZAS][TAM_TETRIMINO][TAM_TETRIMINO] =
+{
+    {
+        {0,1,1,0},
+        {0,1,1,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+    {
+        {1,1,1,1},
+        {0,0,0,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+    {
+        {1,0,0,0},
+        {1,1,1,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+    {
+        {0,0,1,0},
+        {1,1,1,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+    {
+        {0,1,1,0},
+        {1,1,0,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+    {
+        {0,1,0,0},
+        {1,1,1,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+    {
+        {1,1,0,0},
+        {0,1,1,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    }
+};
 
-int forma_i[TAM_TETRIMINO][TAM_TETRIMINO] = {{1,1,1,1},
-                                             {0,0,0,0},
-                                             {0,0,0,0},
-                                             {0,0,0,0}};
 
-int forma_j[TAM_TETRIMINO][TAM_TETRIMINO] = {{1,0,0,0},
-                                             {1,1,1,0},
-                                             {0,0,0,0},
-                                             {0,0,0,0}};
+Tetrimino crear_tetrimino(int columnas)
+{
+    Tetrimino t;
 
-int forma_l[TAM_TETRIMINO][TAM_TETRIMINO] = {{0,0,0,1},
-                                             {0,1,1,1},
-                                             {0,0,0,0},
-                                             {0,0,0,0}};
+    t.pos_y = 0;
+    t.pos_x = columnas / 2;
+   // t.forma =
 
-int forma_s[TAM_TETRIMINO][TAM_TETRIMINO] = {{0,0,1,1},
-                                             {0,1,1,0},
-                                             {0,0,0,0},
-                                             {0,0,0,0}};
+    return t;
 
-int forma_t[TAM_TETRIMINO][TAM_TETRIMINO] = {{0,1,0,0},
-                                             {1,1,1,0},
-                                             {0,0,0,0},
-                                             {0,0,0,0}};
-
-int forma_z[TAM_TETRIMINO][TAM_TETRIMINO] = {{1,1,0,0},
-                                             {0,1,1,0},
-                                             {0,0,0,0},
-                                             {0,0,0,0}};
-
-
+}
 
 void rotar_tetrimino(Tetrimino* p)
 {
@@ -60,4 +82,40 @@ void rotar_tetrimino(Tetrimino* p)
             p->forma[i][TAM_TETRIMINO - 1 - j] = aux;
         }
     }
+
+    normalizar_tetrimino(p->forma);
+}
+
+void normalizar_tetrimino(int m[TAM_TETRIMINO][TAM_TETRIMINO])
+{
+    int min_fila = TAM_TETRIMINO, min_col = TAM_TETRIMINO;
+
+    for (int i = 0; i < TAM_TETRIMINO; i++)
+    {
+        for (int j = 0; j < TAM_TETRIMINO; j++)
+        {
+            if (m[i][j])
+            {
+                if (i < min_fila) min_fila = i;
+                if (j < min_col)  min_col = j;
+            }
+        }
+    }
+
+    int aux[TAM_TETRIMINO][TAM_TETRIMINO] = {0};
+
+    for (int i = min_fila; i < TAM_TETRIMINO; i++)
+    {
+        for (int j = min_col; j < TAM_TETRIMINO; j++)
+        {
+            if (m[i][j])
+            {
+                aux[i - min_fila][j - min_col] = 1;
+            }
+        }
+    }
+
+    for (int i = 0; i < TAM_TETRIMINO; i++)
+        for (int j = 0; j < TAM_TETRIMINO; j++)
+            m[i][j] = aux[i][j];
 }
