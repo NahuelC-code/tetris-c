@@ -47,16 +47,76 @@ int piezas[CANT_PIEZAS][TAM_TETRIMINO][TAM_TETRIMINO] =
 };
 
 
-Tetrimino crear_tetrimino(int columnas)
+Tetrimino crear_tetrimino(int columnas,Vector_numeros* v)
 {
     Tetrimino t;
 
     t.pos_y = 0;
     t.pos_x = columnas / 2;
-   // t.forma =
+    int pos = random_num_vec(v);
+    int id = v->vec[pos];
+
+    for(int i=0;i<TAM_TETRIMINO;i++)
+    {
+        for(int j=0;j<TAM_TETRIMINO;j++)
+        {
+            t.forma[i][j] = piezas[id][i][j];
+        }
+    }
+
+    eliminar_vec_num_posicion(v,pos);
 
     return t;
 
+}
+
+Vector_numeros crear_vector(int ce)
+{
+    Vector_numeros v;
+    v.ce = ce;
+    v.ce_max = ce;
+    inicializa_vector_numeros(&v);
+
+    return v;
+}
+void inicializa_vector_numeros(Vector_numeros* v)
+{
+    int i;
+
+    for(i=0;i<v->ce_max;i++)
+    {
+        v->vec[i] = i ;
+    }
+
+    if(v->ce == 0 )
+        v->ce = v->ce_max;
+
+}
+
+int random_num_vec(Vector_numeros* v)
+{
+    int id;
+    if(v->ce == 0)
+    {
+        inicializa_vector_numeros(v);
+    }
+    id = rand() % v->ce;
+
+    return id;
+}
+
+void eliminar_vec_num_posicion(Vector_numeros* v, int pos)
+{
+    int i;
+
+    if(pos < 0 || pos >= v->ce)
+        return;
+
+    for(i = pos; i < v->ce - 1; i++)
+    {
+        v->vec[i] = v->vec[i + 1];
+    }
+    v->ce--;
 }
 
 void rotar_tetrimino(Tetrimino* p)
