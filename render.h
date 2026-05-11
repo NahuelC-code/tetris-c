@@ -2,14 +2,17 @@
 #define RENDER_H_INCLUDED
 
 #include <GBT/gbt.h>
-#define PIXELES_X_LADO 8
-#define PX_PADDING 4
+#include "tetriminos.h"
+#include "board.h"
+
+#define TAM_BLOQUE 8
 
 #define N 15 // Transparente
 #define A 14 // Amarillo
 #define C 3  // Celeste
 #define V 2  // Verde
 
-void dibujar(const uint8_t[][PIXELES_X_LADO], uint16_t oX, uint16_t oY);
+void dibujar_bloque(uint16_t x, uint16_t y, int color);
+void dibujar_tablero(int** board,Tetrimino* p);
 
 #endif // RENDER_H_INCLUDED

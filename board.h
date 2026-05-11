@@ -8,7 +8,6 @@
 
 void** create_init_board(int filas, int columnas, size_t tam);
 void destruirBoard(void** m, int filas);
-void print_board(int** b);
 int borrar_lineas(int** b) ;
 void vaciar_fila(int* v);
 

@@ -104,30 +104,3 @@ void colocar_pieza(int** board,Tetrimino* p)
     }
 }
 
-void mostrar_tablero(int** board,Tetrimino* p) //Luego de los print se encarga el render
-{
-    int i,j;
-
-    for(i=0;i<FIL_BOARD;i++)
-    {
-        for(j=0;j<COL_BOARD;j++)
-        {
-            if(i>=p->pos_y && i<=p->pos_y+3 && j >= p->pos_x && j<= p->pos_x+3)
-            {
-                if(p->forma[i - p->pos_y][j - p->pos_x] == 1)
-                {
-                    printf("%d ",p->forma[i-p->pos_y][j-p->pos_x]);
-                }
-                else
-                {
-                    printf("%d ",board[i][j]);
-                }
-            }
-            else
-            {
-                printf("%d ",board[i][j]);
-            }
-        }
-        printf("\n");
-    }
-}

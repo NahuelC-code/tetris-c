@@ -39,18 +39,6 @@ void destruirBoard(void** m, int filas)
     free(m);
 }
 
-void print_board(int** b)
-{
-    for (int i=0;i<FIL_BOARD;i++)
-    {
-        for (int j=0;j<COL_BOARD;j++)
-        {
-            printf("%d ",b[i][j]);
-        }
-        printf("\n");
-    }
-}
-
 int borrar_lineas(int** b)
 {
     int i, j, k, cant_lineas=0;

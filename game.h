@@ -13,5 +13,4 @@ void valida_shift_left_pieza(int** board, Tetrimino* p);
 void valida_shift_right_pieza(int** board, Tetrimino* p);
 void valida_rotacion_pieza(int** board,Tetrimino* p);
 void colocar_pieza(int** board,Tetrimino* p) ;
-void mostrar_tablero(int** board,Tetrimino* p) ;
 #endif // GAME_H_INCLUDED

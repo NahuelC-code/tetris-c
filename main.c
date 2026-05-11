@@ -15,7 +15,7 @@ int main()
         return -1;
     }
 
-    if (gbt_crear_ventana("Tetris", 128, 128, 5) != 0) {
+    if (gbt_crear_ventana("Tetris", 80, 160, 3) != 0) {
         fprintf(stderr, "Error al crear ventana: %s\n", gbt_obtener_log());
         return -1;
     }
@@ -81,17 +81,17 @@ int main()
             hay_pieza_activa = 0;
         }
 
-        mostrar_tablero(board,&tetrimino);
-
+        //mostrar_tablero(board,&tetrimino);
+        dibujar_tablero(board,&tetrimino);
         gbt_esperar(100);
-        system("cls");
+        //system("cls");
     }
 
     gbt_temporizador_destruir(temporizador);
     gbt_destruir_ventana();
     gbt_cerrar();
 
-    print_board(board);
+   // print_board(board);
     destruirBoard((void**)board,FIL_BOARD);
     return 0;
 }
