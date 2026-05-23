@@ -4,6 +4,7 @@
 #include "board.h"
 #include "tetriminos.h"
 #include "game.h"
+#include "score.h"
 #include <time.h>
 #include <stdint.h>
 #include "GBT/gbt.h"
@@ -20,9 +21,18 @@ int main()
         return -1;
     }
 
-    tGBT_Temporizador *temporizador = gbt_temporizador_crear(0.5);
+
+    EstadoJuego estado;
+    inicializar_estado(&estado);
+
+    tGBT_Temporizador *temporizador = gbt_temporizador_crear(estado.velocidad_ms/1000.0);
     if (!temporizador) {
         fprintf(stderr, "Error al crear el temporizador: %s\n", gbt_obtener_log());
+        return -1;
+    }
+    tGBT_Temporizador *temp_fijacion = gbt_temporizador_crear(estado.velocidad_fijacion_ms/1000.0);
+    if (!temporizador) {
+        fprintf(stderr, "Error al crear el temporizador de fijacion: %s\n", gbt_obtener_log());
         return -1;
     }
 
@@ -58,6 +68,10 @@ int main()
             valida_rotacion_pieza(board, &tetrimino);
         }
 
+        if (gbt_tecla_presionada(GBTK_q)) {
+            valida_rotacion_pieza_izq(board, &tetrimino);
+        }
+
         if(hay_pieza_activa == 0)
         {
             hay_pieza_activa = valida_colision_pieza(board,&tetrimino);
@@ -67,31 +81,47 @@ int main()
             }
         }
 
-        if(gbt_tecla_sostenida(GBTK_ABAJO) || gbt_temporizador_consumir(temporizador))
+        if(gbt_tecla_sostenida(GBTK_ABAJO))
+        {
+            resul_shift_down = valida_shift_down_pieza(board,&tetrimino);
+            sumar_puntos_bajada_manual(&estado);
+        }
+
+        if(gbt_temporizador_consumir(temporizador))
         {
             resul_shift_down = valida_shift_down_pieza(board,&tetrimino);
         }
 
-        if(resul_shift_down == 1)
+        if(resul_shift_down == INSERTAR_PIEZA)
         {
-            colocar_pieza(board,&tetrimino);
-            lineas_completadas = borrar_lineas(board);
-            tetrimino = crear_tetrimino(TAM_TETRIMINO,&vec_enum);
-            resul_shift_down = 0;
-            hay_pieza_activa = 0;
+            if(gbt_temporizador_consumir(temp_fijacion))
+            {
+                colocar_pieza(board,&tetrimino);
+                lineas_completadas = borrar_lineas(board);
+                sumar_puntos_lineas(&estado, lineas_completadas);
+                registrar_pieza_caida(&estado);
+
+                gbt_temporizador_destruir(temporizador);
+                temporizador = gbt_temporizador_crear(estado.velocidad_ms / 1000.0);
+                gbt_temporizador_destruir(temp_fijacion);
+                temp_fijacion = gbt_temporizador_crear(estado.velocidad_fijacion_ms / 1000.0);
+
+                tetrimino = crear_tetrimino(TAM_TETRIMINO,&vec_enum);
+                resul_shift_down = 0;
+                hay_pieza_activa = 0;
+            }
+
+
         }
 
-        //mostrar_tablero(board,&tetrimino);
         dibujar_tablero(board,&tetrimino);
         gbt_esperar(100);
-        //system("cls");
     }
 
     gbt_temporizador_destruir(temporizador);
+    gbt_temporizador_destruir(temp_fijacion);
     gbt_destruir_ventana();
     gbt_cerrar();
-
-   // print_board(board);
     destruirBoard((void**)board,FIL_BOARD);
     return 0;
 }

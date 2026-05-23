@@ -88,7 +88,16 @@ void valida_rotacion_pieza(int** board,Tetrimino* p)
     }
 }
 
+void valida_rotacion_pieza_izq(int** board,Tetrimino* p)
+{
+    Tetrimino aux = *p;
 
+    rotar_tetrimino_izq(p);
+    if(valida_colision_pieza(board,p) == COLISION)
+    {
+        *p = aux;
+    }
+}
 void colocar_pieza(int** board,Tetrimino* p)
 {
     int i,j;
@@ -103,4 +112,3 @@ void colocar_pieza(int** board,Tetrimino* p)
         }
     }
 }
-

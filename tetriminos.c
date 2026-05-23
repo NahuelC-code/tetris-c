@@ -146,6 +146,33 @@ void rotar_tetrimino(Tetrimino* p)
     normalizar_tetrimino(p->forma);
 }
 
+void rotar_tetrimino_izq(Tetrimino* p)
+{
+    int i,j,aux;
+
+    for(i=0;i<TAM_TETRIMINO;i++)
+    {
+        for(j=i+1;j<TAM_TETRIMINO;j++)
+        {
+            aux = p->forma[i][j];
+            p->forma[i][j] = p->forma[j][i];
+            p->forma[j][i] = aux;
+        }
+    }
+
+    for(i=0;i<TAM_TETRIMINO/2;i++)
+    {
+        for(j=0;j<TAM_TETRIMINO;j++)
+        {
+            aux = p->forma[i][j];
+            p->forma[i][j] = p->forma[TAM_TETRIMINO - 1 - i][j];
+            p->forma[TAM_TETRIMINO - 1 - i][j] = aux;
+        }
+    }
+
+    normalizar_tetrimino(p->forma);
+}
+
 void normalizar_tetrimino(int m[TAM_TETRIMINO][TAM_TETRIMINO])
 {
     int min_fila = TAM_TETRIMINO, min_col = TAM_TETRIMINO;

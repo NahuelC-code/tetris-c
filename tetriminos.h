@@ -27,6 +27,7 @@ void inicializa_vector_numeros(Vector_numeros* v);
 int random_num_vec(Vector_numeros* v);
 void eliminar_vec_num_posicion(Vector_numeros* v, int pos);
 void rotar_tetrimino(Tetrimino* p);
+void rotar_tetrimino_izq(Tetrimino* p);
 void normalizar_tetrimino(int m[TAM_TETRIMINO][TAM_TETRIMINO]);
 int seleccion_random(int*);
 
