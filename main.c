@@ -105,7 +105,11 @@ int main(int argc, char* argv[])
         if(gbt_tecla_sostenida(GBTK_ABAJO))
         {
             resul_shift_down = valida_shift_down_pieza(board,&tetrimino);
-            sumar_puntos_bajada_manual(&estado);
+            if(resul_shift_down != INSERTAR_PIEZA)
+            {
+                sumar_puntos_bajada_manual(&estado);
+            }
+
         }
 
         if(gbt_temporizador_consumir(temporizador))
@@ -135,7 +139,7 @@ int main(int argc, char* argv[])
 
         }
 
-        dibujar_tablero(board,&tetrimino);
+        dibujar_tablero(board,&tetrimino,&estado);
         gbt_esperar(100);
     }
 
