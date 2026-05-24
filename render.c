@@ -1,5 +1,18 @@
 #include "render.h"
 
+
+const Cfg CFG_VGA = {
+    .ancho = 640,
+    .alto = 480,
+    .escala = 2
+};
+
+const Cfg CFG_CGA = {
+    .ancho = 320,
+    .alto = 200,
+    .escala = 1
+};
+
 void dibujar_bloque(uint16_t x, uint16_t y, int color)
 {
     uint16_t pixel_x = x * TAM_BLOQUE;

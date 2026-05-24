@@ -7,16 +7,37 @@
 #include "score.h"
 #include <time.h>
 #include <stdint.h>
+#include <string.h>
 #include "GBT/gbt.h"
 
-int main()
+int main(int argc, char* argv[])
 {
     if (gbt_iniciar() != 0) {
         fprintf(stderr, "Error al iniciar GBT: %s\n", gbt_obtener_log());
         return -1;
     }
 
-    if (gbt_crear_ventana("Tetris", 80, 160, 3) != 0) {
+    Cfg cfg_ejecutable = CFG_VGA;
+
+    if(argc == 3)
+    {
+        if(strcmp(argv[1], "CGA") == 0)
+            cfg_ejecutable = CFG_CGA;
+        else
+            cfg_ejecutable = CFG_VGA;
+
+        cfg_ejecutable.escala = (uint8_t)atoi(argv[2]);
+
+        if(cfg_ejecutable.escala == 0)
+        {
+            fprintf(stderr, "Escala invalida\n");
+            return -1;
+        }
+    }
+
+
+
+    if (gbt_crear_ventana("Tetris", cfg_ejecutable.ancho, cfg_ejecutable.alto, cfg_ejecutable.escala) != 0) {
         fprintf(stderr, "Error al crear ventana: %s\n", gbt_obtener_log());
         return -1;
     }
