@@ -8,8 +8,9 @@
 typedef struct {
     int puntos;
     int piezas_caidas;
-    double velocidad_ms;      // velocidad de caida actual
-    double velocidad_fijacion_ms; // 50% de velocidad_ms
+    int lineas_completadas;
+    double velocidad_ms;
+    double velocidad_fijacion_ms;
 } EstadoJuego;
 
 void inicializar_estado(EstadoJuego* e);

@@ -6,14 +6,19 @@ void inicializar_estado(EstadoJuego* e)
 {
     e->puntos = 0;
     e->piezas_caidas = 0;
+    e->lineas_completadas = 0;
     e->velocidad_ms = VELOCIDAD_INICIAL_MS;
     e->velocidad_fijacion_ms = VELOCIDAD_INICIAL_MS * 0.5;
 }
 
 void sumar_puntos_lineas(EstadoJuego* e, int lineas)
 {
+   int nivel;
     if(lineas >= 1 && lineas <= 4)
-        e->puntos += PUNTOS_LINEAS[lineas];
+    {
+        nivel = e->piezas_caidas / PIEZAS_POR_NIVEL + 1;
+        e->puntos += PUNTOS_LINEAS[lineas] * nivel;
+    }
 }
 
 void sumar_puntos_bajada_manual(EstadoJuego* e)

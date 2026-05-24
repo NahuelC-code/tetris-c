@@ -5,10 +5,29 @@
 #include "tetriminos.h"
 #include "game.h"
 #include "score.h"
+#include "config.h"
 #include <time.h>
 #include <stdint.h>
 #include <string.h>
 #include "GBT/gbt.h"
+
+/*
+Apellido: CAVALLARO, NAHUEL ADRIÁN
+DNI: 43587894
+Usuario: NahuelC-code
+Entrega: Sí
+
+Apellido: FRANCO, LUCIO
+DNI: 44838882
+Usuario: -
+Entrega: No
+
+Apellido: RUBONI, CARLOS OSCAR
+DNI: 42290616
+Usuario: -
+Entrega: No
+*/
+
 
 int main(int argc, char* argv[])
 {
@@ -42,6 +61,8 @@ int main(int argc, char* argv[])
         return -1;
     }
 
+    Config config;
+    config_cargar(&config);
 
     int corriendo = 1;
 
@@ -100,8 +121,105 @@ int main(int argc, char* argv[])
     int jugando = corriendo;
     while(jugando)
     {
+        int opcion_principal = 0;
+        int en_menu_principal = 1;
+        while(en_menu_principal)
+        {
+            gbt_procesar_entrada();
+            dibujar_menu_principal(opcion_principal, cfg_ejecutable);
+
+            if(gbt_tecla_presionada(GBTK_ARRIBA))
+                if(opcion_principal > 0) opcion_principal--;
+
+            if(gbt_tecla_presionada(GBTK_ABAJO))
+                if(opcion_principal < 2) opcion_principal++;
+
+            if(gbt_tecla_presionada(GBTK_ENTER))
+            {
+                if(opcion_principal == 0)
+                    en_menu_principal = 0;
+                else if(opcion_principal == 1)
+                {
+                    int opcion_config = 0;
+                    int en_menu_config = 1;
+                    while(en_menu_config)
+                    {
+                        gbt_procesar_entrada();
+                        dibujar_menu_config(&config, opcion_config, cfg_ejecutable);
+
+                        if(gbt_tecla_presionada(GBTK_ARRIBA))
+                            if(opcion_config > 0) opcion_config--;
+
+                        if(gbt_tecla_presionada(GBTK_ABAJO))
+                            if(opcion_config < 3) opcion_config++;
+
+                        if(gbt_tecla_presionada(GBTK_ENTER))
+                        {
+                            if(opcion_config == 0)
+                            {
+                                if(config.paleta == PALETA_CLASICA) config.paleta = PALETA_RETRO;
+                                else config.paleta = PALETA_CLASICA;
+                            }
+                            else if(opcion_config == 1)
+                            {
+                                if(config.resolucion == RES_CGA) config.resolucion = RES_VGA;
+                                else config.resolucion = RES_CGA;
+                            }
+                            else if(opcion_config == 2)
+                            {
+                                if(config.velocidad_ms == VEL_LENTA) config.velocidad_ms = VEL_NORMAL;
+                                else if(config.velocidad_ms == VEL_NORMAL) config.velocidad_ms = VEL_RAPIDA;
+                                else config.velocidad_ms = VEL_LENTA;
+                            }
+                            else if(opcion_config == 3)
+                            {
+                                config_guardar(&config);
+                                en_menu_config = 0;
+                            }
+                        }
+
+                        if(gbt_tecla_presionada(GBTK_ESCAPE))
+                        {
+                            config_guardar(&config);
+                            en_menu_config = 0;
+                        }
+                        gbt_esperar(100);
+                    }
+                }
+                else if(opcion_principal == 2)
+                {
+                    en_menu_principal = 0;
+                    jugando = 0;
+                }
+            }
+
+            if(gbt_tecla_presionada(GBTK_ESCAPE))
+            {
+                en_menu_principal = 0;
+                jugando = 0;
+            }
+            gbt_esperar(100);
+        }
+
+        if(config.resolucion == RES_CGA)
+            cfg_ejecutable = CFG_CGA;
+        else
+            cfg_ejecutable = CFG_VGA;
+
+        gbt_destruir_ventana();
+        if(gbt_crear_ventana("Tetris", cfg_ejecutable.ancho, cfg_ejecutable.alto, cfg_ejecutable.escala) != 0)
+        {
+            fprintf(stderr, "Error al crear ventana: %s\n", gbt_obtener_log());
+            return -1;
+        }
+
+        if(!jugando)
+            break;
+
         EstadoJuego estado;
         inicializar_estado(&estado);
+        estado.velocidad_ms = config.velocidad_ms;
+        estado.velocidad_fijacion_ms = config.velocidad_ms * 0.5;
 
         tGBT_Temporizador *temporizador = gbt_temporizador_crear(estado.velocidad_ms/1000.0);
         if (!temporizador) {
@@ -128,7 +246,6 @@ int main(int argc, char* argv[])
 
             if (gbt_tecla_presionada(GBTK_ESCAPE)) {
                 corriendo = 0;
-                jugando = 0;
             }
 
             if(gbt_tecla_presionada(GBTK_p))
@@ -198,6 +315,7 @@ int main(int argc, char* argv[])
                     colocar_pieza(board,&tetrimino);
                     lineas_completadas = borrar_lineas(board);
                     sumar_puntos_lineas(&estado, lineas_completadas);
+                    estado.lineas_completadas += lineas_completadas;
                     registrar_pieza_caida(&estado);
 
                     gbt_temporizador_destruir(temporizador);
@@ -213,14 +331,14 @@ int main(int argc, char* argv[])
 
             }
 
-            dibujar_tablero(board,&tetrimino,&estado);
+            dibujar_tablero(board,&tetrimino,&estado,config.paleta);
             gbt_esperar(100);
         }
 
-        while(jugando)
+        while(corriendo == COLISION)
         {
             gbt_procesar_entrada();
-            dibujar_game_over(&estado, cfg_ejecutable);
+            dibujar_game_over(&estado, nick, cfg_ejecutable);
             if(gbt_tecla_presionada(GBTK_r))
                 break;
             if(gbt_tecla_presionada(GBTK_ESCAPE))

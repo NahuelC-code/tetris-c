@@ -1,8 +1,8 @@
 #ifndef TETRIMINOS_H_INCLUDED
 #define TETRIMINOS_H_INCLUDED
 
-#include <stdlib.h> // utilizar rand()
-#include <time.h> // utilizar rand()
+#include <stdlib.h>
+#include <time.h>
 
 #define TAM_TETRIMINO 4
 #define CANT_PIEZAS 7
@@ -29,6 +29,4 @@ void eliminar_vec_num_posicion(Vector_numeros* v, int pos);
 void rotar_tetrimino(Tetrimino* p);
 void rotar_tetrimino_izq(Tetrimino* p);
 void normalizar_tetrimino(int m[TAM_TETRIMINO][TAM_TETRIMINO]);
-int seleccion_random(int*);
-
 #endif // TETRIMINOS_H_INCLUDED

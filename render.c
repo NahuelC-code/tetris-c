@@ -1910,9 +1910,21 @@ void dibujar_bloque(uint16_t x, uint16_t y, int color)
         }
      }
 }
-void dibujar_tablero(int** board,Tetrimino* p, EstadoJuego* estado)
+void dibujar_tablero(int** board,Tetrimino* p, EstadoJuego* estado, int paleta)
 {
     int i, j;
+    uint8_t color_board, color_pieza;
+    if(paleta == PALETA_CLASICA)
+    {
+        color_board = C;
+        color_pieza = A;
+    }
+    else
+    {
+        color_board = 2;
+        color_pieza = 4;
+    }
+
 
     gbt_borrar_backbuffer(0);
 
@@ -1922,7 +1934,7 @@ void dibujar_tablero(int** board,Tetrimino* p, EstadoJuego* estado)
         {
             if(board[i][j] == 1)
             {
-                dibujar_bloque(j, i, C);
+                dibujar_bloque(j, i, color_board);
             }
         }
     }
@@ -1933,11 +1945,7 @@ void dibujar_tablero(int** board,Tetrimino* p, EstadoJuego* estado)
         {
             if(p->forma[i][j] == 1)
             {
-                dibujar_bloque(
-                    p->pos_x + j,
-                    p->pos_y + i,
-                    A
-                );
+                dibujar_bloque(p->pos_x + j, p->pos_y + i, color_pieza);
             }
         }
     }
@@ -1955,7 +1963,6 @@ void dibujar_tablero(int** board,Tetrimino* p, EstadoJuego* estado)
 
     gbt_volcar_backbuffer();
 
-    gbt_volcar_backbuffer();
 }
 
 void dibujar_texto_8x8(uint16_t x, uint16_t y, const char* texto, uint8_t color)
@@ -2020,14 +2027,100 @@ void dibujar_pausa(Cfg cfg)
     gbt_volcar_backbuffer();
 }
 
-void dibujar_game_over(EstadoJuego* estado, Cfg cfg)
+void dibujar_game_over(EstadoJuego* estado, const char* nick, Cfg cfg)
 {
     char buf[32];
     gbt_borrar_backbuffer(0);
-    dibujar_texto_8x16(cfg.ancho/2 - 48, cfg.alto/2 - 40, "GAME OVER", 14);
+    dibujar_texto_8x16(cfg.ancho/2 - 48, cfg.alto/2 - 60, "GAME OVER", 14);
+    sprintf(buf, "Nick: %s", nick);
+    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 - 20, buf, 3);
     sprintf(buf, "Puntaje: %d", estado->puntos);
-    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2, buf, 3);
-    dibujar_texto_8x8(cfg.ancho/2 - 64, cfg.alto/2 + 20, "R - Jugar nuevamente", 14);
-    dibujar_texto_8x8(cfg.ancho/2 - 64, cfg.alto/2 + 35, "ESC - Salir", 3);
+    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 - 5, buf, 3);
+    sprintf(buf, "Nivel: %d", estado->piezas_caidas / PIEZAS_POR_NIVEL + 1);
+    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 + 10, buf, 3);
+    sprintf(buf, "Lineas: %d", estado->lineas_completadas);
+    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 + 25, buf, 3);
+    dibujar_texto_8x8(cfg.ancho/2 - 64, cfg.alto/2 + 45, "R - Jugar nuevamente", 14);
+    dibujar_texto_8x8(cfg.ancho/2 - 64, cfg.alto/2 + 60, "ESC - Salir", 3);
+    gbt_volcar_backbuffer();
+}
+
+void dibujar_menu_principal(int opcion, Cfg cfg_ejecutable)
+{
+    uint8_t color0, color1, color2;
+
+    if(opcion == 0)
+        color0 = 14;
+    else
+        color0 = 3;
+
+    if(opcion == 1)
+        color1 = 14;
+    else
+        color1 = 3;
+
+    if(opcion == 2)
+        color2 = 14;
+    else
+        color2 = 3;
+
+    gbt_borrar_backbuffer(0);
+    dibujar_texto_8x16(cfg_ejecutable.ancho/2 - 32, 20, "TETRIS", 14);
+    dibujar_texto_8x8(20, 60, "Iniciar juego", color0);
+    dibujar_texto_8x8(20, 75, "Configuracion", color1);
+    dibujar_texto_8x8(20, 90, "Salir", color2);
+    gbt_volcar_backbuffer();
+}
+
+void dibujar_menu_config(Config* cfg, int opcion, Cfg cfg_ejecutable)
+{
+    char buf[32];
+    char* paletas[] = {"Clasica", "Retro"};
+    char* resoluciones[] = {"CGA", "VGA"};
+    char* velocidades[] = {"Lenta", "Normal", "Rapida"};
+    int vel_id;
+    uint8_t color0, color1, color2, color3;
+
+    if(cfg->velocidad_ms == VEL_LENTA)
+        vel_id = 0;
+    else if(cfg->velocidad_ms == VEL_RAPIDA)
+        vel_id = 2;
+    else
+        vel_id = 1;
+
+    if(opcion == 0)
+        color0 = 14;
+    else
+        color0 = 3;
+
+    if(opcion == 1)
+        color1 = 14;
+    else
+        color1 = 3;
+
+    if(opcion == 2)
+        color2 = 14;
+    else
+        color2 = 3;
+
+    if(opcion == 3)
+        color3 = 14;
+    else
+        color3 = 3;
+
+    gbt_borrar_backbuffer(0);
+    dibujar_texto_8x16(cfg_ejecutable.ancho/2 - 56, 20, "CONFIGURACION", 14);
+
+    sprintf(buf, "Paleta: %s", paletas[cfg->paleta]);
+    dibujar_texto_8x8(20, 60, buf, color0);
+
+    sprintf(buf, "Resolucion: %s", resoluciones[cfg->resolucion]);
+    dibujar_texto_8x8(20, 75, buf, color1);
+
+    sprintf(buf, "Velocidad: %s", velocidades[vel_id]);
+    dibujar_texto_8x8(20, 90, buf, color2);
+
+    dibujar_texto_8x8(20, 105, "Volver", color3);
+
     gbt_volcar_backbuffer();
 }
