@@ -27,5 +27,9 @@ void dibujar_bloque(uint16_t x, uint16_t y, int color);
 void dibujar_tablero(int** board,Tetrimino* p, EstadoJuego* estado);
 void dibujar_texto_8x8(uint16_t x, uint16_t y, const char* texto, uint8_t color);
 void dibujar_texto_8x16(uint16_t x, uint16_t y, const char* texto, uint8_t color);
+void dibujar_pantalla_presentacion(Cfg cfg);
+void dibujar_pantalla_nombre(char* nick, Cfg cfg);
+void dibujar_pausa(Cfg cfg);
+void dibujar_game_over(EstadoJuego* estado, Cfg cfg);
 
 #endif // RENDER_H_INCLUDED

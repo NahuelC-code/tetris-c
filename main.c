@@ -43,113 +43,199 @@ int main(int argc, char* argv[])
     }
 
 
-    EstadoJuego estado;
-    inicializar_estado(&estado);
-
-    tGBT_Temporizador *temporizador = gbt_temporizador_crear(estado.velocidad_ms/1000.0);
-    if (!temporizador) {
-        fprintf(stderr, "Error al crear el temporizador: %s\n", gbt_obtener_log());
-        return -1;
-    }
-    tGBT_Temporizador *temp_fijacion = gbt_temporizador_crear(estado.velocidad_fijacion_ms/1000.0);
-    if (!temporizador) {
-        fprintf(stderr, "Error al crear el temporizador de fijacion: %s\n", gbt_obtener_log());
-        return -1;
-    }
-
-    int** board = (int**)create_init_board(FIL_BOARD,COL_BOARD,sizeof(int));
-
-    Vector_numeros vec_enum ;
-    vec_enum = crear_vector(CANT_PIEZAS);
-    Tetrimino tetrimino;
-    tetrimino = crear_tetrimino(TAM_TETRIMINO,&vec_enum);
     int corriendo = 1;
-    int hay_pieza_activa = 0;
-    int resul_shift_down = 0;
-    int lineas_completadas;
+
+    char nick[20] = {0};
+    int nick_len = 0;
+
+    while(corriendo)
+    {
+        gbt_procesar_entrada();
+        dibujar_pantalla_presentacion(cfg_ejecutable);
+        if(gbt_tecla_presionada(GBTK_ESCAPE))
+        {
+            corriendo = 0;
+            break;
+        }
+        if(gbt_obtener_tecla_presionada() != GBTK_DESCONOCIDA)
+            break;
+        gbt_esperar(100);
+    }
 
     while(corriendo)
     {
         gbt_procesar_entrada();
 
-        if (gbt_tecla_presionada(GBTK_ESCAPE)) {
+        if(gbt_tecla_presionada(GBTK_ESCAPE))
+        {
             corriendo = 0;
+            break;
         }
 
-        if(resul_shift_down != INSERTAR_PIEZA)
+        eGBT_Tecla tecla = gbt_obtener_tecla_presionada();
+
+        if(tecla == GBTK_ENTER && nick_len > 0)
+            break;
+
+        if(tecla == GBTK_RETROCESO && nick_len > 0)
         {
-            if (gbt_tecla_sostenida(GBTK_IZQUIERDA)) {
-            valida_shift_left_pieza(board, &tetrimino);
-            }
-
-            if (gbt_tecla_sostenida(GBTK_DERECHA)) {
-                valida_shift_right_pieza(board, &tetrimino);
-            }
-
-            if (gbt_tecla_presionada(GBTK_ARRIBA)) {
-                valida_rotacion_pieza(board, &tetrimino);
-            }
-
-            if (gbt_tecla_presionada(GBTK_q)) {
-                valida_rotacion_pieza_izq(board, &tetrimino);
-            }
-
+            nick_len--;
+            nick[nick_len] = '\0';
         }
 
-        if(hay_pieza_activa == 0)
+        if(nick_len < 19)
         {
-            hay_pieza_activa = valida_colision_pieza(board,&tetrimino);
-            if (hay_pieza_activa == COLISION)
+            if(tecla >= GBTK_a && tecla <= GBTK_z)
             {
-                corriendo = COLISION; //fin de la ejecucion.
+                nick[nick_len] = (char)tecla;
+                nick_len++;
+                nick[nick_len] = '\0';
             }
         }
 
-        if(gbt_tecla_sostenida(GBTK_ABAJO))
-        {
-            resul_shift_down = valida_shift_down_pieza(board,&tetrimino);
-            if(resul_shift_down != INSERTAR_PIEZA)
-            {
-                sumar_puntos_bajada_manual(&estado);
-            }
-
-        }
-
-        if(gbt_temporizador_consumir(temporizador))
-        {
-            resul_shift_down = valida_shift_down_pieza(board,&tetrimino);
-        }
-
-        if(resul_shift_down == INSERTAR_PIEZA)
-        {
-            if(gbt_temporizador_consumir(temp_fijacion))
-            {
-                colocar_pieza(board,&tetrimino);
-                lineas_completadas = borrar_lineas(board);
-                sumar_puntos_lineas(&estado, lineas_completadas);
-                registrar_pieza_caida(&estado);
-
-                gbt_temporizador_destruir(temporizador);
-                temporizador = gbt_temporizador_crear(estado.velocidad_ms / 1000.0);
-                gbt_temporizador_destruir(temp_fijacion);
-                temp_fijacion = gbt_temporizador_crear(estado.velocidad_fijacion_ms / 1000.0);
-
-                tetrimino = crear_tetrimino(TAM_TETRIMINO,&vec_enum);
-                resul_shift_down = 0;
-                hay_pieza_activa = 0;
-            }
-
-
-        }
-
-        dibujar_tablero(board,&tetrimino,&estado);
+        dibujar_pantalla_nombre(nick, cfg_ejecutable);
         gbt_esperar(100);
     }
 
-    gbt_temporizador_destruir(temporizador);
-    gbt_temporizador_destruir(temp_fijacion);
+    int jugando = corriendo;
+    while(jugando)
+    {
+        EstadoJuego estado;
+        inicializar_estado(&estado);
+
+        tGBT_Temporizador *temporizador = gbt_temporizador_crear(estado.velocidad_ms/1000.0);
+        if (!temporizador) {
+            fprintf(stderr, "Error al crear el temporizador: %s\n", gbt_obtener_log());
+            return -1;
+        }
+        tGBT_Temporizador *temp_fijacion = gbt_temporizador_crear(estado.velocidad_fijacion_ms/1000.0);
+        if (!temp_fijacion) {
+            fprintf(stderr, "Error al crear el temporizador de fijacion: %s\n", gbt_obtener_log());
+            return -1;
+        }
+
+        int** board = (int**)create_init_board(FIL_BOARD, COL_BOARD, sizeof(int));
+        Vector_numeros vec_enum = crear_vector(CANT_PIEZAS);
+        Tetrimino tetrimino = crear_tetrimino(TAM_TETRIMINO, &vec_enum);
+        int hay_pieza_activa = 0;
+        int resul_shift_down = 0;
+        int lineas_completadas;
+        corriendo = 1;
+
+        while(corriendo)
+        {
+            gbt_procesar_entrada();
+
+            if (gbt_tecla_presionada(GBTK_ESCAPE)) {
+                corriendo = 0;
+                jugando = 0;
+            }
+
+            if(gbt_tecla_presionada(GBTK_p))
+            {
+                gbt_temporizador_pausar(temporizador);
+                gbt_temporizador_pausar(temp_fijacion);
+                int pausado = 1;
+                while(pausado)
+                {
+                    gbt_procesar_entrada();
+                    dibujar_pausa(cfg_ejecutable);
+                    if(gbt_tecla_presionada(GBTK_p))
+                        pausado = 0;
+                    gbt_esperar(100);
+                }
+                gbt_temporizador_reanudar(temporizador);
+                gbt_temporizador_reanudar(temp_fijacion);
+            }
+
+            if(resul_shift_down != INSERTAR_PIEZA)
+            {
+                if (gbt_tecla_sostenida(GBTK_IZQUIERDA)) {
+                valida_shift_left_pieza(board, &tetrimino);
+                }
+
+                if (gbt_tecla_sostenida(GBTK_DERECHA)) {
+                    valida_shift_right_pieza(board, &tetrimino);
+                }
+
+                if (gbt_tecla_presionada(GBTK_ARRIBA)) {
+                    valida_rotacion_pieza(board, &tetrimino);
+                }
+
+                if (gbt_tecla_presionada(GBTK_q)) {
+                    valida_rotacion_pieza_izq(board, &tetrimino);
+                }
+            }
+
+            if(hay_pieza_activa == 0)
+            {
+                hay_pieza_activa = valida_colision_pieza(board,&tetrimino);
+                if (hay_pieza_activa == COLISION)
+                {
+                    corriendo = COLISION;
+                }
+            }
+
+            if(gbt_tecla_sostenida(GBTK_ABAJO))
+            {
+                resul_shift_down = valida_shift_down_pieza(board,&tetrimino);
+                if(resul_shift_down != INSERTAR_PIEZA)
+                {
+                    sumar_puntos_bajada_manual(&estado);
+                }
+
+            }
+
+            if(gbt_temporizador_consumir(temporizador))
+            {
+                resul_shift_down = valida_shift_down_pieza(board,&tetrimino);
+            }
+
+            if(resul_shift_down == INSERTAR_PIEZA)
+            {
+                if(gbt_temporizador_consumir(temp_fijacion))
+                {
+                    colocar_pieza(board,&tetrimino);
+                    lineas_completadas = borrar_lineas(board);
+                    sumar_puntos_lineas(&estado, lineas_completadas);
+                    registrar_pieza_caida(&estado);
+
+                    gbt_temporizador_destruir(temporizador);
+                    temporizador = gbt_temporizador_crear(estado.velocidad_ms / 1000.0);
+                    gbt_temporizador_destruir(temp_fijacion);
+                    temp_fijacion = gbt_temporizador_crear(estado.velocidad_fijacion_ms / 1000.0);
+
+                    tetrimino = crear_tetrimino(TAM_TETRIMINO,&vec_enum);
+                    resul_shift_down = 0;
+                    hay_pieza_activa = 0;
+                }
+
+
+            }
+
+            dibujar_tablero(board,&tetrimino,&estado);
+            gbt_esperar(100);
+        }
+
+        while(jugando)
+        {
+            gbt_procesar_entrada();
+            dibujar_game_over(&estado, cfg_ejecutable);
+            if(gbt_tecla_presionada(GBTK_r))
+                break;
+            if(gbt_tecla_presionada(GBTK_ESCAPE))
+            {
+                jugando = 0;
+                break;
+            }
+            gbt_esperar(100);
+        }
+        gbt_temporizador_destruir(temporizador);
+        gbt_temporizador_destruir(temp_fijacion);
+        destruirBoard((void**)board,FIL_BOARD);
+    }
+
     gbt_destruir_ventana();
     gbt_cerrar();
-    destruirBoard((void**)board,FIL_BOARD);
     return 0;
 }

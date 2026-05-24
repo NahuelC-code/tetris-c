@@ -1993,3 +1993,41 @@ void dibujar_texto_8x16(uint16_t x, uint16_t y, const char* texto, uint8_t color
         texto++;
     }
 }
+
+void dibujar_pantalla_presentacion(Cfg cfg)
+{
+    gbt_borrar_backbuffer(0);
+    dibujar_texto_8x16(cfg.ancho/2 - 24, cfg.alto/2 - 40, "TETRIS", 14);
+    dibujar_texto_8x8(cfg.ancho/2 - 92, cfg.alto/2 - 10, "Topicos de Programacion", 3);
+    dibujar_texto_8x8(cfg.ancho/2 - 132, cfg.alto/2 + 30, "Presione una tecla para continuar", 14);
+    gbt_volcar_backbuffer();
+}
+
+void dibujar_pantalla_nombre(char* nick, Cfg cfg)
+{
+    gbt_borrar_backbuffer(0);
+    uint16_t x = cfg.ancho/2 - 80;
+    uint16_t y = cfg.alto/2 - 40;
+    dibujar_texto_8x8(x, y, "Ingrese su nick: ", 14);
+    dibujar_texto_8x8(x + 136, y, nick, 3);
+    gbt_volcar_backbuffer();
+}
+
+void dibujar_pausa(Cfg cfg)
+{
+    gbt_borrar_backbuffer(0);
+    dibujar_texto_8x16(cfg.ancho/2 - 32, cfg.alto/2 - 8, "PAUSADO", 14);
+    gbt_volcar_backbuffer();
+}
+
+void dibujar_game_over(EstadoJuego* estado, Cfg cfg)
+{
+    char buf[32];
+    gbt_borrar_backbuffer(0);
+    dibujar_texto_8x16(cfg.ancho/2 - 48, cfg.alto/2 - 40, "GAME OVER", 14);
+    sprintf(buf, "Puntaje: %d", estado->puntos);
+    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2, buf, 3);
+    dibujar_texto_8x8(cfg.ancho/2 - 64, cfg.alto/2 + 20, "R - Jugar nuevamente", 14);
+    dibujar_texto_8x8(cfg.ancho/2 - 64, cfg.alto/2 + 35, "ESC - Salir", 3);
+    gbt_volcar_backbuffer();
+}
