@@ -56,13 +56,19 @@ int main(int argc, char* argv[])
 
 
 
+    Config config;
+    config_cargar(&config);
+
     if (gbt_crear_ventana("Tetris", cfg_ejecutable.ancho, cfg_ejecutable.alto, cfg_ejecutable.escala) != 0) {
         fprintf(stderr, "Error al crear ventana: %s\n", gbt_obtener_log());
         return -1;
     }
 
-    Config config;
-    config_cargar(&config);
+    if(config.paleta == PALETA_CLASICA)
+        aplicar_paleta_clasica();
+    else
+        aplicar_paleta_retro();
+
 
     int corriendo = 1;
 
@@ -212,6 +218,10 @@ int main(int argc, char* argv[])
             fprintf(stderr, "Error al crear ventana: %s\n", gbt_obtener_log());
             return -1;
         }
+        if(config.paleta == PALETA_CLASICA)
+            aplicar_paleta_clasica();
+        else
+            aplicar_paleta_retro();
 
         if(!jugando)
             break;
@@ -331,7 +341,7 @@ int main(int argc, char* argv[])
 
             }
 
-            dibujar_tablero(board,&tetrimino,&estado,config.paleta);
+            dibujar_tablero(board,&tetrimino,&estado,config.paleta,cfg_ejecutable);
             gbt_esperar(100);
         }
 

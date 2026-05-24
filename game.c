@@ -11,7 +11,7 @@ int valida_colision_pieza(int** board,Tetrimino* p )
         for (j= 0; j< TAM_TETRIMINO; j++)
         {
 
-            if (p->forma[i][j] == 1 && (p->pos_x + j < 0 || p->pos_x + j >= COL_BOARD || p->pos_y + i < 0 || p->pos_y + i >= FIL_BOARD || board[i + p->pos_y][p->pos_x + j] == 1))
+            if (p->forma[i][j] == 1 && (p->pos_x + j < 0 || p->pos_x + j >= COL_BOARD || p->pos_y + i < 0 || p->pos_y + i >= FIL_BOARD || board[i + p->pos_y][p->pos_x + j] != 0))
             {
               return COLISION;
             }
@@ -30,7 +30,7 @@ int valida_shift_down_pieza(int** board,Tetrimino* p)
         {
             if(p->forma[i][j] == 1)
             {
-                if(i + p->pos_y == FIL_BOARD-1 || board[i+p->pos_y+1][j+p->pos_x] == 1)
+                if(i + p->pos_y == FIL_BOARD-1 || board[i+p->pos_y+1][j+p->pos_x] != 0)
                 {
                     return INSERTAR_PIEZA;
                 }
@@ -51,7 +51,7 @@ void valida_shift_left_pieza(int** board,Tetrimino* p)
         {
             if(p->forma[i][j] == 1)
             {
-                if(j+p->pos_x == 0 || board[p->pos_y + i][p->pos_x + j -1] == 1)
+                if(j+p->pos_x == 0 || board[p->pos_y + i][p->pos_x + j -1] != 0)
                     return;
             }
         }
@@ -69,7 +69,7 @@ void valida_shift_right_pieza(int** board,Tetrimino* p)
         {
             if(p->forma[i][j] == 1)
             {
-                if(j+p->pos_x == COL_BOARD-1 || board[p->pos_y + i][p->pos_x + j +1] == 1)
+                if(j+p->pos_x == COL_BOARD-1 || board[p->pos_y + i][p->pos_x + j +1] != 0)
                     return;
             }
         }
@@ -107,7 +107,7 @@ void colocar_pieza(int** board,Tetrimino* p)
         {
             if(p->forma[i][j] == 1)
             {
-                board[p->pos_y+i][p->pos_x+j] = 1;
+                board[p->pos_y+i][p->pos_x+j] = p->id + 1;
             }
         }
     }

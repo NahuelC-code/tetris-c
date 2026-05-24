@@ -56,6 +56,8 @@ Tetrimino crear_tetrimino(int columnas,Vector_numeros* v)
     int pos = random_num_vec(v);
     int id = v->vec[pos];
 
+    t.id = id;
+
     for(int i=0;i<TAM_TETRIMINO;i++)
     {
         for(int j=0;j<TAM_TETRIMINO;j++)

@@ -13,6 +13,42 @@ const Cfg CFG_CGA = {
     .escala = 1
 };
 
+static tGBT_ColorRGB paleta_clasica[] = {
+    {101, 67,  33},  // 0 - fondo madera oscuro
+    {120, 80,  40},  // 1 - fondo madera medio
+    {139, 90,  43},  // 2 - fondo madera claro
+    {0,   200, 220}, // 3 - I celeste
+    {220, 200, 0},   // 4 - O amarillo
+    {160, 0,   200}, // 5 - T violeta
+    {0,   180, 0},   // 6 - S verde
+    {200, 0,   0},   // 7 - Z rojo
+    {220, 120, 0},   // 8 - L naranja
+    {0,   0,   200}, // 9 - J azul
+    {255, 255, 255}, // 10 - texto titulo
+    {180, 180, 180}, // 11 - texto normal
+    {220, 200, 0},   // 12 - texto seleccionado
+    {0,   0,   0}, // 13 - negro para bordes
+    {1,   1,   1},   // 14 - gris claro
+};
+
+static tGBT_ColorRGB paleta_retro[] = {
+    {180, 140, 90},  // 0 - fondo madera  oscuro
+    {200, 160, 110}, // 1 - fondo madera  medio
+    {220, 180, 130}, // 2 - fondo madera  claro
+    {80,  120, 80},  // 3 - I verde 1
+    {100, 140, 80},  // 4 - O verde 2
+    {60,  100, 60},  // 5 - T verde 3
+    {120, 150, 90},  // 6 - S verde 4
+    {50,  80,  50},  // 7 - Z verde 5
+    {90,  130, 70},  // 8 - L verde 6
+    {40,  70,  40},  // 9 - J verde 7
+    {40,  60,  30},  // 10 - texto titulo
+    {60,  80,  50},  // 11 - texto normal
+    {80,  110, 60},  // 12 - texto seleccionado
+    {0,   0,   0}, // 13 - negro para bordes
+    {1,   1,   1},   // 14 - gris claro
+};
+
 static const uint8_t FUENTE_8x8[123][8][8] = {
     [' '] = {
         {0,0,0,0,0,0,0,0},
@@ -1902,39 +1938,35 @@ void dibujar_bloque(uint16_t x, uint16_t y, int color)
     uint16_t pixel_x = x * TAM_BLOQUE;
     uint16_t pixel_y = y * TAM_BLOQUE;
 
-     for(int i = 0; i < TAM_BLOQUE; i++)
-     {
+    for(int i = 0; i < TAM_BLOQUE; i++)
+    {
         for(int j = 0; j < TAM_BLOQUE; j++)
         {
             gbt_dibujar_pixel(pixel_x + j, pixel_y + i, color);
         }
-     }
+    }
+
+    for(int i = 0; i < TAM_BLOQUE; i++)
+    {
+        gbt_dibujar_pixel(pixel_x + i, pixel_y, 13);
+        gbt_dibujar_pixel(pixel_x + i, pixel_y + TAM_BLOQUE-1, 13);
+        gbt_dibujar_pixel(pixel_x, pixel_y + i, 13);
+        gbt_dibujar_pixel(pixel_x + TAM_BLOQUE-1, pixel_y + i, 13);
+    }
 }
-void dibujar_tablero(int** board,Tetrimino* p, EstadoJuego* estado, int paleta)
+void dibujar_tablero(int** board,Tetrimino* p, EstadoJuego* estado, int paleta,Cfg cfg)
 {
     int i, j;
-    uint8_t color_board, color_pieza;
-    if(paleta == PALETA_CLASICA)
-    {
-        color_board = C;
-        color_pieza = A;
-    }
-    else
-    {
-        color_board = 2;
-        color_pieza = 4;
-    }
 
-
-    gbt_borrar_backbuffer(0);
+    dibujar_fondo(cfg);
 
     for(i = 0; i < FIL_BOARD; i++)
     {
         for(j = 0; j < COL_BOARD; j++)
         {
-            if(board[i][j] == 1)
+            if(board[i][j] != 0)
             {
-                dibujar_bloque(j, i, color_board);
+                dibujar_bloque(j, i, board[i][j] + 2);
             }
         }
     }
@@ -1945,7 +1977,7 @@ void dibujar_tablero(int** board,Tetrimino* p, EstadoJuego* estado, int paleta)
         {
             if(p->forma[i][j] == 1)
             {
-                dibujar_bloque(p->pos_x + j, p->pos_y + i, color_pieza);
+                dibujar_bloque(p->pos_x + j, p->pos_y + i, p->id + 3);
             }
         }
     }
@@ -1953,13 +1985,13 @@ void dibujar_tablero(int** board,Tetrimino* p, EstadoJuego* estado, int paleta)
     char buffer[32];
 
     sprintf(buffer, "Score %d", estado->puntos);
-    dibujar_texto_8x8(90, 10, buffer, 14);
+    dibujar_texto_8x8(90, 10, buffer, 10);
 
     sprintf(buffer, "Nivel %d", estado->piezas_caidas / PIEZAS_POR_NIVEL + 1);
-    dibujar_texto_8x8(90, 25, buffer, 14);
+    dibujar_texto_8x8(90, 25, buffer, 10);
 
     sprintf(buffer, "Vel %dms", (int)estado->velocidad_ms);
-    dibujar_texto_8x8(90, 40, buffer, 14);
+    dibujar_texto_8x8(90, 40, buffer, 10);
 
     gbt_volcar_backbuffer();
 
@@ -2003,45 +2035,45 @@ void dibujar_texto_8x16(uint16_t x, uint16_t y, const char* texto, uint8_t color
 
 void dibujar_pantalla_presentacion(Cfg cfg)
 {
-    gbt_borrar_backbuffer(0);
-    dibujar_texto_8x16(cfg.ancho/2 - 24, cfg.alto/2 - 40, "TETRIS", 14);
-    dibujar_texto_8x8(cfg.ancho/2 - 92, cfg.alto/2 - 10, "Topicos de Programacion", 3);
-    dibujar_texto_8x8(cfg.ancho/2 - 132, cfg.alto/2 + 30, "Presione una tecla para continuar", 14);
+    dibujar_fondo(cfg);
+    dibujar_texto_8x16(cfg.ancho/2 - 24, cfg.alto/2 - 40, "TETRIS", 10);
+    dibujar_texto_8x8(cfg.ancho/2 - 92, cfg.alto/2 - 10, "Topicos de Programacion", 11);
+    dibujar_texto_8x8(cfg.ancho/2 - 132, cfg.alto/2 + 30, "Presione una tecla para continuar", 10);
     gbt_volcar_backbuffer();
 }
 
 void dibujar_pantalla_nombre(char* nick, Cfg cfg)
 {
-    gbt_borrar_backbuffer(0);
+    dibujar_fondo(cfg);
     uint16_t x = cfg.ancho/2 - 80;
     uint16_t y = cfg.alto/2 - 40;
-    dibujar_texto_8x8(x, y, "Ingrese su nick: ", 14);
-    dibujar_texto_8x8(x + 136, y, nick, 3);
+    dibujar_texto_8x8(x, y, "Ingrese su nick: ", 10);
+    dibujar_texto_8x8(x + 136, y, nick, 11);
     gbt_volcar_backbuffer();
 }
 
 void dibujar_pausa(Cfg cfg)
 {
-    gbt_borrar_backbuffer(0);
-    dibujar_texto_8x16(cfg.ancho/2 - 32, cfg.alto/2 - 8, "PAUSADO", 14);
+    dibujar_fondo(cfg);
+    dibujar_texto_8x16(cfg.ancho/2 - 32, cfg.alto/2 - 8, "PAUSADO", 10);
     gbt_volcar_backbuffer();
 }
 
 void dibujar_game_over(EstadoJuego* estado, const char* nick, Cfg cfg)
 {
     char buf[32];
-    gbt_borrar_backbuffer(0);
-    dibujar_texto_8x16(cfg.ancho/2 - 48, cfg.alto/2 - 60, "GAME OVER", 14);
+    dibujar_fondo(cfg);
+    dibujar_texto_8x16(cfg.ancho/2 - 48, cfg.alto/2 - 60, "GAME OVER", 10);
     sprintf(buf, "Nick: %s", nick);
-    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 - 20, buf, 3);
+    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 - 20, buf, 11);
     sprintf(buf, "Puntaje: %d", estado->puntos);
-    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 - 5, buf, 3);
+    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 - 5, buf, 11);
     sprintf(buf, "Nivel: %d", estado->piezas_caidas / PIEZAS_POR_NIVEL + 1);
-    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 + 10, buf, 3);
+    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 + 10, buf, 11);
     sprintf(buf, "Lineas: %d", estado->lineas_completadas);
-    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 + 25, buf, 3);
-    dibujar_texto_8x8(cfg.ancho/2 - 64, cfg.alto/2 + 45, "R - Jugar nuevamente", 14);
-    dibujar_texto_8x8(cfg.ancho/2 - 64, cfg.alto/2 + 60, "ESC - Salir", 3);
+    dibujar_texto_8x8(cfg.ancho/2 - 48, cfg.alto/2 + 25, buf, 11);
+    dibujar_texto_8x8(cfg.ancho/2 - 64, cfg.alto/2 + 45, "R - Jugar nuevamente", 10);
+    dibujar_texto_8x8(cfg.ancho/2 - 64, cfg.alto/2 + 60, "ESC - Salir", 11);
     gbt_volcar_backbuffer();
 }
 
@@ -2050,22 +2082,22 @@ void dibujar_menu_principal(int opcion, Cfg cfg_ejecutable)
     uint8_t color0, color1, color2;
 
     if(opcion == 0)
-        color0 = 14;
+        color0 = 10;
     else
-        color0 = 3;
+        color0 = 11;
 
     if(opcion == 1)
-        color1 = 14;
+        color1 = 10;
     else
-        color1 = 3;
+        color1 = 11;
 
     if(opcion == 2)
-        color2 = 14;
+        color2 = 10;
     else
-        color2 = 3;
+        color2 = 11;
 
-    gbt_borrar_backbuffer(0);
-    dibujar_texto_8x16(cfg_ejecutable.ancho/2 - 32, 20, "TETRIS", 14);
+    dibujar_fondo(cfg_ejecutable);
+    dibujar_texto_8x16(cfg_ejecutable.ancho/2 - 32, 20, "TETRIS", 10);
     dibujar_texto_8x8(20, 60, "Iniciar juego", color0);
     dibujar_texto_8x8(20, 75, "Configuracion", color1);
     dibujar_texto_8x8(20, 90, "Salir", color2);
@@ -2089,27 +2121,27 @@ void dibujar_menu_config(Config* cfg, int opcion, Cfg cfg_ejecutable)
         vel_id = 1;
 
     if(opcion == 0)
-        color0 = 14;
+        color0 = 10;
     else
-        color0 = 3;
+        color0 = 11;
 
     if(opcion == 1)
-        color1 = 14;
+        color1 = 10;
     else
-        color1 = 3;
+        color1 = 11;
 
     if(opcion == 2)
-        color2 = 14;
+        color2 = 10;
     else
-        color2 = 3;
+        color2 = 11;
 
     if(opcion == 3)
-        color3 = 14;
+        color3 = 10;
     else
-        color3 = 3;
+        color3 = 11;
 
-    gbt_borrar_backbuffer(0);
-    dibujar_texto_8x16(cfg_ejecutable.ancho/2 - 56, 20, "CONFIGURACION", 14);
+    dibujar_fondo(cfg_ejecutable);
+    dibujar_texto_8x16(cfg_ejecutable.ancho/2 - 56, 20, "CONFIGURACION", 10);
 
     sprintf(buf, "Paleta: %s", paletas[cfg->paleta]);
     dibujar_texto_8x8(20, 60, buf, color0);
@@ -2123,4 +2155,42 @@ void dibujar_menu_config(Config* cfg, int opcion, Cfg cfg_ejecutable)
     dibujar_texto_8x8(20, 105, "Volver", color3);
 
     gbt_volcar_backbuffer();
+}
+
+void aplicar_paleta_clasica(void)
+{
+    gbt_aplicar_paleta(paleta_clasica, 15, GBT_FORMATO_888);
+}
+
+void aplicar_paleta_retro(void)
+{
+    gbt_aplicar_paleta(paleta_retro, 15, GBT_FORMATO_888);
+}
+
+void dibujar_fondo(Cfg cfg)
+{
+    int tam = 8;
+    for(int y = 0; y < cfg.alto; y += tam)
+    {
+        for(int x = 0; x < cfg.ancho; x += tam)
+        {
+            int id = (x/tam + y/tam) % 3;
+            uint8_t color;
+            if(id == 0)
+                color = 0;
+            else if(id == 1)
+                color = 1;
+            else
+                color = 2;
+
+            for(int i = 0; i < tam; i++)
+            {
+                for(int j = 0; j < tam; j++)
+                {
+                    gbt_dibujar_pixel(x + j, y + i, color);
+                }
+            }
+
+        }
+    }
 }

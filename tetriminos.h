@@ -11,6 +11,7 @@ typedef struct{
     int forma[TAM_TETRIMINO][TAM_TETRIMINO];
     int pos_x;
     int pos_y;
+    int id;
 
 }Tetrimino;
 

@@ -47,10 +47,10 @@ int borrar_lineas(int** b)
 
     for(i=FIL_BOARD-1;i>= 0; i--)
     {
-        if(m[i][0] == 1)
+        if(m[i][0] >= 1)
         {
             j=1;
-            while(j < COL_BOARD && m[i][j] == 1)
+            while(j < COL_BOARD && m[i][j] >= 1)
             {
                 j++;
             }
