@@ -76,7 +76,7 @@ void valida_shift_right_pieza(int** board,Tetrimino* p)
     p->pos_x ++;
 }
 
-void valida_rotacion_pieza(int** board,Tetrimino* p)
+void valida_rotacion_pieza_der(int** board,Tetrimino* p)
 {
     if(p->id == 0)
         return;

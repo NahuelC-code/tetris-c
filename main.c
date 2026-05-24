@@ -280,8 +280,8 @@ int main(int argc, char* argv[])
                     valida_shift_right_pieza(board, &tetrimino);
                 }
 
-                if (gbt_tecla_presionada(GBTK_ARRIBA)) {
-                    valida_rotacion_pieza(board, &tetrimino);
+                if (gbt_tecla_presionada(GBTK_ARRIBA) || gbt_tecla_presionada(GBTK_e)) {
+                    valida_rotacion_pieza_der(board, &tetrimino);
                 }
 
                 if (gbt_tecla_presionada(GBTK_q)) {
