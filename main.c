@@ -76,21 +76,24 @@ int main(int argc, char* argv[])
             corriendo = 0;
         }
 
-
-        if (gbt_tecla_sostenida(GBTK_IZQUIERDA)) {
+        if(resul_shift_down != INSERTAR_PIEZA)
+        {
+            if (gbt_tecla_sostenida(GBTK_IZQUIERDA)) {
             valida_shift_left_pieza(board, &tetrimino);
-        }
+            }
 
-        if (gbt_tecla_sostenida(GBTK_DERECHA)) {
-            valida_shift_right_pieza(board, &tetrimino);
-        }
+            if (gbt_tecla_sostenida(GBTK_DERECHA)) {
+                valida_shift_right_pieza(board, &tetrimino);
+            }
 
-        if (gbt_tecla_presionada(GBTK_ARRIBA)) {
-            valida_rotacion_pieza(board, &tetrimino);
-        }
+            if (gbt_tecla_presionada(GBTK_ARRIBA)) {
+                valida_rotacion_pieza(board, &tetrimino);
+            }
 
-        if (gbt_tecla_presionada(GBTK_q)) {
-            valida_rotacion_pieza_izq(board, &tetrimino);
+            if (gbt_tecla_presionada(GBTK_q)) {
+                valida_rotacion_pieza_izq(board, &tetrimino);
+            }
+
         }
 
         if(hay_pieza_activa == 0)
