@@ -52,7 +52,7 @@ Tetrimino crear_tetrimino(int columnas,Vector_numeros* v)
     Tetrimino t;
 
     t.pos_y = 0;
-    t.pos_x = columnas / 2;
+    t.pos_x = columnas / 2 + 1;
     int pos = random_num_vec(v);
     int id = v->vec[pos];
 

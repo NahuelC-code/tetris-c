@@ -1,5 +1,4 @@
 #include "game.h"
-#include <stdio.h>
 
 
 int valida_colision_pieza(int** board,Tetrimino* p )
@@ -11,7 +10,7 @@ int valida_colision_pieza(int** board,Tetrimino* p )
         for (j= 0; j< TAM_TETRIMINO; j++)
         {
 
-            if (p->forma[i][j] == 1 && (p->pos_x + j < 0 || p->pos_x + j >= COL_BOARD || p->pos_y + i < 0 || p->pos_y + i >= FIL_BOARD || board[i + p->pos_y][p->pos_x + j] != 0))
+            if (p->forma[i][j] == 1 && (p->pos_x + j < 0 || p->pos_x + j >= COL_BOARD || p->pos_y + i < 0 || p->pos_y + i >= FIL_TOTAL || board[i + p->pos_y][p->pos_x + j] != 0))
             {
               return COLISION;
             }
@@ -30,7 +29,7 @@ int valida_shift_down_pieza(int** board,Tetrimino* p)
         {
             if(p->forma[i][j] == 1)
             {
-                if(i + p->pos_y == FIL_BOARD-1 || board[i+p->pos_y+1][j+p->pos_x] != 0)
+                if(i + p->pos_y == FIL_TOTAL-1 || board[i+p->pos_y+1][j+p->pos_x] != 0)
                 {
                     return INSERTAR_PIEZA;
                 }
@@ -79,6 +78,9 @@ void valida_shift_right_pieza(int** board,Tetrimino* p)
 
 void valida_rotacion_pieza(int** board,Tetrimino* p)
 {
+    if(p->id == 0)
+        return;
+
     Tetrimino aux = *p;
 
     rotar_tetrimino(p);
@@ -90,6 +92,9 @@ void valida_rotacion_pieza(int** board,Tetrimino* p)
 
 void valida_rotacion_pieza_izq(int** board,Tetrimino* p)
 {
+    if(p->id == 0)
+        return;
+
     Tetrimino aux = *p;
 
     rotar_tetrimino_izq(p);

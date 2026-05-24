@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include "board.h"
 
 #define TAM_TETRIMINO 4
 #define CANT_PIEZAS 7

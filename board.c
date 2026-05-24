@@ -1,5 +1,4 @@
 #include "board.h"
-#include <stdio.h>
 
 
 void** create_init_board(int filas, int columnas, size_t tamElem)
@@ -45,7 +44,7 @@ int borrar_lineas(int** b)
     int* aux;
     int** m = b;
 
-    for(i=FIL_BOARD-1;i>= 0; i--)
+    for(i=FIL_TOTAL-1;i>= 0; i--)
     {
         if(m[i][0] >= 1)
         {

@@ -1,12 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "render.h"
-#include "board.h"
-#include "tetriminos.h"
 #include "game.h"
-#include "score.h"
-#include "config.h"
-#include <time.h>
 #include <stdint.h>
 #include <string.h>
 #include "GBT/gbt.h"
@@ -110,7 +105,7 @@ int main(int argc, char* argv[])
             nick[nick_len] = '\0';
         }
 
-        if(nick_len < 19)
+        if(nick_len < 8)
         {
             if(tecla >= GBTK_a && tecla <= GBTK_z)
             {
@@ -242,7 +237,7 @@ int main(int argc, char* argv[])
             return -1;
         }
 
-        int** board = (int**)create_init_board(FIL_BOARD, COL_BOARD, sizeof(int));
+        int** board = (int**)create_init_board(FIL_TOTAL, COL_BOARD, sizeof(int));
         Vector_numeros vec_enum = crear_vector(CANT_PIEZAS);
         Tetrimino tetrimino = crear_tetrimino(TAM_TETRIMINO, &vec_enum);
         int hay_pieza_activa = 0;
@@ -341,7 +336,7 @@ int main(int argc, char* argv[])
 
             }
 
-            dibujar_tablero(board,&tetrimino,&estado,config.paleta,cfg_ejecutable);
+            dibujar_tablero(board,&tetrimino,&estado,config.paleta,cfg_ejecutable, nick);
             gbt_esperar(100);
         }
 
@@ -360,7 +355,7 @@ int main(int argc, char* argv[])
         }
         gbt_temporizador_destruir(temporizador);
         gbt_temporizador_destruir(temp_fijacion);
-        destruirBoard((void**)board,FIL_BOARD);
+        destruirBoard((void**)board,FIL_TOTAL);
     }
 
     gbt_destruir_ventana();
