@@ -32,4 +32,5 @@ void aplicar_paleta_clasica(void);
 void aplicar_paleta_retro(void);
 void dibujar_fondo(Cfg cfg);
 void dibujar_rectangulo(uint16_t x, uint16_t y, uint16_t ancho, uint16_t alto, uint8_t color_fondo, uint8_t color_borde);
+void dibujar_ranking(EntradaRanking* ranking, int cantidad, Cfg cfg);
 #endif // RENDER_H_INCLUDED

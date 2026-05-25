@@ -2122,7 +2122,7 @@ void dibujar_game_over(EstadoJuego* estado, const char* nick, Cfg cfg)
 
 void dibujar_menu_principal(int opcion, Cfg cfg_ejecutable)
 {
-    uint8_t color0, color1, color2;
+    uint8_t color0, color1, color2, color3;
 
     if(opcion == 0)
         color0 = 10;
@@ -2139,6 +2139,11 @@ void dibujar_menu_principal(int opcion, Cfg cfg_ejecutable)
     else
         color2 = 11;
 
+    if (opcion == 3)
+        color3 = 10;
+    else
+        color3 = 11;
+
     uint16_t cx = cfg_ejecutable.ancho / 2;
     uint16_t cy = cfg_ejecutable.alto / 4;
 
@@ -2152,8 +2157,11 @@ void dibujar_menu_principal(int opcion, Cfg cfg_ejecutable)
     if(opcion == 1) dibujar_rectangulo(cx - 56, cy + 76, 112, 16, 14, 13);
     dibujar_texto_8x8(cx - 52, cy + 80, "Configuracion", color1);
 
-    if(opcion == 2) dibujar_rectangulo(cx - 24, cy + 96, 48, 16, 14, 13);
-    dibujar_texto_8x8(cx - 20, cy + 100, "Salir", color2);
+    if(opcion == 2) dibujar_rectangulo(cx - 36, cy + 96, 72, 16, 14, 13);
+    dibujar_texto_8x8(cx - 32, cy + 100, "Ranking", color2);
+
+    if(opcion == 3) dibujar_rectangulo(cx - 24, cy + 116, 48, 16, 14, 13);
+    dibujar_texto_8x8(cx - 20, cy + 120, "Salir", color3);
 
     gbt_volcar_backbuffer();
 }
@@ -2273,4 +2281,32 @@ void dibujar_rectangulo(uint16_t x, uint16_t y, uint16_t ancho, uint16_t alto, u
         gbt_dibujar_pixel(x, y + k, color_borde);
         gbt_dibujar_pixel(x + ancho - 1, y + k, color_borde);
     }
+}
+
+void dibujar_ranking(EntradaRanking* ranking, int cantidad, Cfg cfg)
+{
+    char buf[32];
+    dibujar_fondo(cfg);
+    uint16_t cx = cfg.ancho / 2;
+    uint16_t cy = 20;
+    dibujar_texto_8x16(cx - 44, cy, "RANKING", 10);
+    if(cantidad == 0)
+    {
+        dibujar_texto_8x8(cx - 60, cy + 40, "No hay puntajes aun", 11);
+    }
+    else
+    {
+        for(int i = 0; i < cantidad; i++)
+        {
+            sprintf(buf, "%d. %s - %d", i + 1, ranking[i].nick, ranking[i].puntos);
+            uint8_t color;
+            if(i == 0)
+                color = 12;
+            else
+                color = 11;
+            dibujar_texto_8x8(cx - 80, cy + 40 + i * 14, buf, color);
+        }
+    }
+    dibujar_texto_8x8(cx - 60, cfg.alto - 20, "ENTER - Volver", 11);
+    gbt_volcar_backbuffer();
 }

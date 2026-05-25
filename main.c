@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
                 if(opcion_principal > 0) opcion_principal--;
 
             if(gbt_tecla_presionada(GBTK_ABAJO))
-                if(opcion_principal < 2) opcion_principal++;
+                if(opcion_principal < 3) opcion_principal++;
 
             if(gbt_tecla_presionada(GBTK_ENTER))
             {
@@ -191,6 +191,24 @@ int main(int argc, char* argv[])
                 }
                 else if(opcion_principal == 2)
                 {
+                    EntradaRanking ranking[MAX_RANKING];
+                    int cantidad = 0;
+                    cargar_ranking(ranking, &cantidad);
+                    int en_ranking = 1;
+                    while(en_ranking)
+                    {
+                        gbt_procesar_entrada();
+                        dibujar_ranking(ranking, cantidad, cfg_ejecutable);
+                        if(gbt_tecla_presionada(GBTK_ENTER))
+                        {
+                            gbt_esperar(200);
+                            en_ranking = 0;
+                        }
+
+                    }
+                }
+                else if(opcion_principal == 3)
+                {
                     en_menu_principal = 0;
                     jugando = 0;
                 }
@@ -213,7 +231,6 @@ int main(int argc, char* argv[])
         }
 
         gbt_destruir_ventana();
-
 
         if(gbt_crear_ventana("Tetris", cfg_ejecutable.ancho, cfg_ejecutable.alto, cfg_ejecutable.escala) != 0)
         {
@@ -346,6 +363,8 @@ int main(int argc, char* argv[])
             dibujar_tablero(board,&tetrimino,&estado,config.paleta,cfg_ejecutable, nick);
             gbt_esperar(100);
         }
+
+        guardar_ranking(nick, estado.puntos);
 
         while(corriendo == COLISION)
         {
