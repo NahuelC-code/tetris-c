@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
             nick[nick_len] = '\0';
         }
 
-        if(nick_len < 8)
+        if(nick_len < 10)
         {
             if(tecla >= GBTK_a && tecla <= GBTK_z)
             {
