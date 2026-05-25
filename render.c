@@ -18,7 +18,7 @@ const Cfg CFG_CGA = {
 static tGBT_ColorRGB paleta_clasica[] = {
     {15,  15,  30},  // 0 - fondo oscuro azulado
     {25,  25,  50},  // 1 - fondo medio azulado
-    {35,  35,  70},  // 2 - fondo claro azulado  // 2 - fondo madera claro
+    {35,  35,  70},  // 2 - fondo claro azulado
     {0,   200, 220}, // 3 - I celeste
     {220, 200, 0},   // 4 - O amarillo
     {160, 0,   200}, // 5 - T violeta

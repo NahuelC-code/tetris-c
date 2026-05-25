@@ -14,12 +14,12 @@ Entrega: Sí
 
 Apellido: FRANCO, LUCIO
 DNI: 44838882
-Usuario: -
+Usuario: Lucio-Franco
 Entrega: No
 
 Apellido: RUBONI, CARLOS OSCAR
 DNI: 42290616
-Usuario: -
+Usuario: Carlos-dot-6
 Entrega: No
 */
 
