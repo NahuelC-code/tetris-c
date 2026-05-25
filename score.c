@@ -90,7 +90,11 @@ void cargar_ranking(EntradaRanking* ranking, int* cantidad)
     FILE* f = fopen("ranking.bin", "rb");
     if(!f) return;
     fread(cantidad, sizeof(int), 1, f);
-    if(*cantidad > MAX_RANKING) *cantidad = MAX_RANKING;
+    if(*cantidad > MAX_RANKING)
+    {
+        *cantidad = MAX_RANKING;
+    }
+
     fread(ranking, sizeof(EntradaRanking), *cantidad, f);
     fclose(f);
 }

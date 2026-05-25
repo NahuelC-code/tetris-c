@@ -2151,16 +2151,20 @@ void dibujar_menu_principal(int opcion, Cfg cfg_ejecutable)
 
     dibujar_texto_8x16(cx - 24, cy, "TETRIS", 10);
 
-    if(opcion == 0) dibujar_rectangulo(cx - 56, cy + 56, 112, 16, 14, 13);
+    if(opcion == 0)
+        dibujar_rectangulo(cx - 56, cy + 56, 112, 16, 14, 13);
     dibujar_texto_8x8(cx - 52, cy + 60, "Iniciar juego", color0);
 
-    if(opcion == 1) dibujar_rectangulo(cx - 56, cy + 76, 112, 16, 14, 13);
+    if(opcion == 1)
+        dibujar_rectangulo(cx - 56, cy + 76, 112, 16, 14, 13);
     dibujar_texto_8x8(cx - 52, cy + 80, "Configuracion", color1);
 
-    if(opcion == 2) dibujar_rectangulo(cx - 36, cy + 96, 72, 16, 14, 13);
+    if(opcion == 2)
+        dibujar_rectangulo(cx - 36, cy + 96, 72, 16, 14, 13);
     dibujar_texto_8x8(cx - 32, cy + 100, "Ranking", color2);
 
-    if(opcion == 3) dibujar_rectangulo(cx - 24, cy + 116, 48, 16, 14, 13);
+    if(opcion == 3)
+        dibujar_rectangulo(cx - 24, cy + 116, 48, 16, 14, 13);
     dibujar_texto_8x8(cx - 20, cy + 120, "Salir", color3);
 
     gbt_volcar_backbuffer();
@@ -2209,18 +2213,22 @@ void dibujar_menu_config(Config* cfg, int opcion, Cfg cfg_ejecutable)
     dibujar_texto_8x16(cx - 52, cy - 80, "CONFIGURACION", 10);
 
     sprintf(buf, "Paleta: %s", paletas[cfg->paleta]);
-    if(opcion == 0) dibujar_rectangulo(cx - 64, cy - 24, 128, 16, 14, 13);
+    if(opcion == 0)
+        dibujar_rectangulo(cx - 64, cy - 24, 128, 16, 14, 13);
     dibujar_texto_8x8(cx - 60, cy - 20, buf, color0);
 
     sprintf(buf, "Resolucion: %s", resoluciones[cfg->resolucion]);
-    if(opcion == 1) dibujar_rectangulo(cx - 64, cy - 4, 128, 16, 14, 13);
+    if(opcion == 1)
+        dibujar_rectangulo(cx - 64, cy - 4, 128, 16, 14, 13);
     dibujar_texto_8x8(cx - 60, cy, buf, color1);
 
     sprintf(buf, "Velocidad: %s", velocidades[vel_id]);
-    if(opcion == 2) dibujar_rectangulo(cx - 72, cy + 16, 144, 16, 14, 13);
+    if(opcion == 2)
+        dibujar_rectangulo(cx - 72, cy + 16, 144, 16, 14, 13);
     dibujar_texto_8x8(cx - 68, cy + 20, buf, color2);
 
-    if(opcion == 3) dibujar_rectangulo(cx - 28, cy + 36, 56, 16, 14, 13);
+    if(opcion == 3)
+        dibujar_rectangulo(cx - 28, cy + 36, 56, 16, 14, 13);
     dibujar_texto_8x8(cx - 24, cy + 40, "Volver", color3);
 
     gbt_volcar_backbuffer();
