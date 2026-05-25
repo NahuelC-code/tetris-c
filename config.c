@@ -13,7 +13,6 @@ void config_cargar(Config* c)
     FILE* f = fopen("config.bin", "rb");
     if(!f)
     {
-        printf("No existe config.bin, usando defaults\n");
         config_default(c);
         return;
     }

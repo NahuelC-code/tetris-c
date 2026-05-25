@@ -33,6 +33,8 @@ int main(int argc, char* argv[])
 
     Cfg cfg_ejecutable = CFG_VGA;
 
+    uint8_t usar_args = (argc == 3);
+
     if(argc == 3)
     {
         if(strcmp(argv[1], "CGA") == 0)
@@ -42,7 +44,7 @@ int main(int argc, char* argv[])
 
         cfg_ejecutable.escala = (uint8_t)atoi(argv[2]);
 
-        if(cfg_ejecutable.escala == 0)
+        if(cfg_ejecutable.escala <= 0)
         {
             fprintf(stderr, "Escala invalida\n");
             return -1;
@@ -202,12 +204,17 @@ int main(int argc, char* argv[])
             gbt_esperar(100);
         }
 
-        if(config.resolucion == RES_CGA)
-            cfg_ejecutable = CFG_CGA;
-        else
-            cfg_ejecutable = CFG_VGA;
+        if(!usar_args)
+        {
+            if(config.resolucion == RES_CGA)
+                cfg_ejecutable = CFG_CGA;
+            else
+                cfg_ejecutable = CFG_VGA;
+        }
 
         gbt_destruir_ventana();
+
+
         if(gbt_crear_ventana("Tetris", cfg_ejecutable.ancho, cfg_ejecutable.alto, cfg_ejecutable.escala) != 0)
         {
             fprintf(stderr, "Error al crear ventana: %s\n", gbt_obtener_log());
